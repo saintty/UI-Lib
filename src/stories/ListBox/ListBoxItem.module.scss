@@ -1,0 +1,38 @@
+@use "./../__styles/mixins.scss" as *;
+
+.root {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-radius: 2px;
+  transition: background-color 0.15s ease;
+
+  @include custom-focus;
+
+  @include hover {
+    background-color: #e2e5ec;
+  }
+
+  & + & {
+    margin-top: 2px;
+  }
+
+  &.active {
+    background-color: #e2e5ec;
+  }
+
+  &.disabled {
+    cursor: auto;
+    opacity: 0.5;
+    background-color: #9fa9b3;
+  }
+
+  &.selected::after {
+    content: "+";
+  }
+}

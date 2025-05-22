@@ -1,0 +1,31 @@
+.root {
+  position: relative;
+}
+
+.trigger {
+  outline: none;
+}
+
+.tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-4px);
+  margin-top: 6px;
+  background: #5472d3;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  z-index: 10;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+
+  &.visible {
+    visibility: visible;
+    opacity: 0.95;
+    transform: translateX(-50%) translateY(0);
+  }
+}

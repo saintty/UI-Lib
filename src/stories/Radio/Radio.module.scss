@@ -1,0 +1,59 @@
+@use "./../__styles/mixins.scss" as *;
+
+.root {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  &:has(.radio:focus-visible) {
+    @include custom-focus(true);
+  }
+}
+
+.radio {
+  appearance: none;
+  position: relative;
+  width: 24px;
+  height: 24px;
+  border: 2px solid #3b82f6;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+
+  &.disabled {
+    border-color: #e1e2e3;
+  }
+
+  &:not(.disabled) {
+    cursor: pointer;
+
+    @include hover {
+      border-color: #2563eb;
+    }
+
+    & ~ .label {
+      cursor: pointer;
+    }
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #1d1f20;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+  }
+
+  &.checked {
+    border-color: #3b82f6;
+
+    &::before {
+      opacity: 1;
+    }
+  }
+}

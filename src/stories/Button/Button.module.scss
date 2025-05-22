@@ -1,0 +1,37 @@
+@use "./../__styles/mixins.scss" as *;
+
+.root {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  padding: 10px 20px;
+
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  background-color: rgb(91, 139, 230);
+  text-decoration: none;
+
+  transition: border-radius 0.3s ease-in-out, background 0.3s linear;
+  cursor: pointer;
+
+  &:disabled {
+    cursor: auto;
+    background-color: rgba(91, 139, 230, 0.75);
+  }
+
+  &:not(:disabled) {
+    @include hover {
+      border-radius: 50px;
+      background-color: rgb(73, 119, 204);
+    }
+
+    @include active {
+      background-color: rgb(45, 93, 182);
+    }
+  }
+
+  @include custom-focus;
+}

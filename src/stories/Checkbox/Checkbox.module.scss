@@ -1,0 +1,56 @@
+@use "./../__styles/mixins.scss" as *;
+
+.root {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+
+  &.disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  @include custom-focus;
+}
+
+.box {
+  width: 16px;
+  height: 16px;
+  border: 1px solid #ccc;
+  margin-right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  transition: background-color 0.3s ease;
+
+  &::after {
+    opacity: 0;
+    transform: opacity 0.3s ease;
+  }
+
+  &.checked {
+    position: relative;
+    background-color: #2684ff;
+    border-color: #2684ff;
+
+    &::after {
+      position: absolute;
+      inset: 0;
+      content: "+";
+      color: white;
+      opacity: 1;
+      text-align: center;
+    }
+  }
+
+  &.invalid {
+    border-color: red;
+  }
+}
+
+.error {
+  font-size: 12px;
+  line-height: 14px;
+  color: red;
+}
