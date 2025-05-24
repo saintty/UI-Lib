@@ -118,3 +118,7 @@ input {
 
   resize: none;
 }
+
+body.lock-scroll {
+  overflow: hidden;
+}
