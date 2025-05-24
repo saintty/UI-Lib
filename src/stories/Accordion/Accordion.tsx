@@ -20,17 +20,19 @@ export const Accordion = ({
   const contentId = useId();
   const buttonId = useId();
 
-  const [isControlled, isOpen, setIsOpen] = useControlled(isOpenProp);
+  const [, isOpen, setIsOpen] = useControlled(isOpenProp);
 
   const [maxHeight, setMaxHeight] = useState<string>("0px");
 
   const contentRef = useRef<HTMLDivElement>(null);
 
   const handleToggle = useCallback(() => {
-    onToggle?.(isControlled ? !isOpenProp : !isOpen);
+    setIsOpen((prev) => {
+      onToggle?.(!prev);
 
-    if (!isControlled) setIsOpen(!isOpen);
-  }, [isControlled, isOpen, isOpenProp, onToggle, setIsOpen]);
+      return !prev;
+    });
+  }, [onToggle, setIsOpen]);
 
   useEffect(() => {
     const needUpdate = isOpen && contentRef.current;
@@ -46,8 +48,8 @@ export const Accordion = ({
     <div className={s.root}>
       <button
         id={buttonId}
+        data-slot="button"
         type="button"
-        tabIndex={0}
         className={s.header}
         aria-expanded={isOpen}
         aria-controls={contentId}
@@ -60,6 +62,7 @@ export const Accordion = ({
       </button>
       <div
         id={contentId}
+        role="region"
         className={s.content}
         ref={contentRef}
         aria-labelledby={buttonId}

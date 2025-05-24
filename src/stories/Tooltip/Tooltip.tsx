@@ -1,5 +1,5 @@
-import { ReactNode, useCallback, useId, useRef, useState } from "react";
 import cx from "classnames";
+import { ReactNode, useCallback, useId, useRef, useState } from "react";
 
 import s from "./Tooltip.module.scss";
 
