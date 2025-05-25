@@ -1,0 +1,25 @@
+@use "./../__styles/mixins.scss" as *;
+
+.root {
+  min-width: 500px;
+  max-height: 600px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 16px;
+  outline: none;
+}
+
+.item {
+  padding: 16px;
+  margin-bottom: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #fff;
+
+  @include custom-focus;
+}
+
+.loading {
+  width: fit-content;
+  margin: 16px auto 0;
+}
