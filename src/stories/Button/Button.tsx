@@ -15,16 +15,17 @@ import { Spinner } from "../Spinner/Spinner";
 import ripple from "./../__styles/ripple.module.scss";
 import s from "./Button.module.scss";
 
-export type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
-  startContent?: ReactNode;
-  endContent?: ReactNode;
-  href?: string;
-  isLoading?: boolean;
-  isDisabled?: boolean;
-  linkProps?: AnchorHTMLAttributes<HTMLAnchorElement>;
-  withRipple?: boolean;
-  onClick?: () => void;
-};
+export type Props = ButtonHTMLAttributes<HTMLButtonElement> &
+  DefaultProps & {
+    startContent?: ReactNode;
+    endContent?: ReactNode;
+    href?: string;
+    isLoading?: boolean;
+    isDisabled?: boolean;
+    linkProps?: AnchorHTMLAttributes<HTMLAnchorElement>;
+    withRipple?: boolean;
+    onClick?: () => void;
+  };
 
 export const Button = memo(
   ({
@@ -38,6 +39,7 @@ export const Button = memo(
     isLoading,
     isDisabled,
     withRipple = false,
+    children,
     onClick,
     ...props
   }: Props) => {
@@ -51,6 +53,7 @@ export const Button = memo(
         {isLoading && <span hidden>Идет загрузка</span>}
         {startContent && <span className={s.startContent}>{startContent}</span>}
         {title}
+        {children}
         {endContent && <span className={s.endContent}>{endContent}</span>}
         {isLoading && (
           <span className={s.loadingContent}>
