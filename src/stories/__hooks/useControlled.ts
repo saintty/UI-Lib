@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 
-import { isNil } from "../__utils/isNill";
+import { isNil } from "../__utils/is-nil";
 
 type ReturnValue<T> = [
   boolean,

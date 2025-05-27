@@ -25,7 +25,6 @@ export const useInfiniteScroll = <T extends HTMLElement = HTMLDivElement>({
       const { scrollTop, scrollHeight, clientHeight } = container;
       const isNearBottom = scrollTop + clientHeight >= scrollHeight - threshold;
 
-      console.log(isNearBottom);
       if (isNearBottom) onLoadMore();
     };
 

@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import { createPortal } from "react-dom";
 
-import { useClickOutside } from "../__hooks/useClickOut";
+import { useClickOutside } from "../__hooks/useClickOutside";
 
 import { getFocusableElements } from "./_helpers";
 
@@ -59,7 +59,7 @@ export const ModalWrapper = ({
     [onClose]
   );
 
-  useClickOutside(contentRef, onClose);
+  useClickOutside([contentRef], onClose);
 
   useEffect(() => {
     const handler = (event: globalThis.KeyboardEvent) => {

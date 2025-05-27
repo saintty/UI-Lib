@@ -6,7 +6,7 @@ import React, {
   useState,
 } from "react";
 
-import { isNil } from "../__utils/isNill";
+import { isNil } from "../__utils/is-nil";
 import { getNextIndex, getPrevIndex, keyDownHandlerKeys } from "./utils";
 
 import { ListBoxItem } from "./ListBoxItem";
