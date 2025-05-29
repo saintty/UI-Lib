@@ -11,11 +11,11 @@ import { createPortal } from "react-dom";
 import { useClickOutside } from "../__hooks/useClickOutside";
 
 import { getFocusableElements } from "./_helpers";
-
-import s from "./Modal.module.scss";
 import { lockScroll, unlockScroll } from "../__utils/scroll";
 
-type Props = {
+import s from "./Modal.module.scss";
+
+export type Props = {
   isOpen: boolean;
   title: string;
   children: ReactNode;
@@ -32,6 +32,7 @@ export const ModalWrapper = ({
   const titleId = useId();
 
   const contentRef = useRef<HTMLDivElement>(null);
+  const trigger = useRef<HTMLElement>(null);
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
@@ -62,15 +63,15 @@ export const ModalWrapper = ({
   useClickOutside([contentRef], onClose);
 
   useEffect(() => {
-    const handler = (event: globalThis.KeyboardEvent) => {
-      const { key } = event;
+    if (!(document.activeElement instanceof HTMLElement)) return;
 
-      if (key === "Escape") onClose();
+    trigger.current = document.activeElement;
+    contentRef.current?.focus();
+
+    return () => {
+      trigger.current?.focus();
     };
-
-    document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
-  }, [handleKeyDown, onClose]);
+  }, []);
 
   const modal = (
     <div className={s.backdrop} role="presentation">

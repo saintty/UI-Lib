@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { Feed } from "./Feed";
-import { FeedWrapper } from "./decorators";
+import { FeedWrapper } from "./_decorators";
 
 const meta: Meta<typeof Feed> = {
   title: "UI/Feed",
