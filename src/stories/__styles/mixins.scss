@@ -7,20 +7,24 @@
 }
 
 @mixin custom-focus($directly: false) {
-  &:focus {
-    outline: none;
-  }
-
-  &:focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.5);
-    transition: box-shadow 0.2s ease;
-  }
-
   @if $directly {
     outline: none;
     box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.5);
     transition: box-shadow 0.2s ease;
+
+    @content;
+  } @else {
+    &:focus {
+      outline: none;
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.5);
+      transition: box-shadow 0.2s ease;
+    }
+
+    @content;
   }
 }
 

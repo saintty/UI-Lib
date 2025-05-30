@@ -1,0 +1,57 @@
+@use "./../__styles/mixins.scss" as *;
+
+.root {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  font-family: sans-serif;
+}
+
+.tabs {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+}
+
+.tab {
+  padding: 10px 20px;
+  margin-right: 8px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: #333;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+
+  @include custom-focus {
+    z-index: 1;
+    position: relative;
+  }
+
+  @include hover {
+    &:not([aria-disabled="true"]) {
+      color: #0070f3;
+    }
+  }
+
+  &.selected {
+    border-bottom-color: #0070f3;
+    font-weight: bold;
+    color: #0070f3;
+  }
+
+  &.disabled {
+    color: #aaa;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+.panel {
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-top: none;
+  background: #fff;
+  font-size: 0.95rem;
+}
