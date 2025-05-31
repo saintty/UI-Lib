@@ -1,0 +1,80 @@
+@use "./../__styles/mixins.scss" as *;
+
+.root {
+  position: relative;
+
+  width: 100%;
+
+  &.disabled {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+}
+
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 20px 12px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: white;
+  outline: none;
+  transition: border-color 0.2s ease;
+
+  &:has(.input:focus-visible) {
+    @include custom-focus(true);
+  }
+
+  &.error {
+    border-color: #e00;
+  }
+}
+
+.startContent,
+.endContent {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.endContent {
+  top: -4px;
+}
+
+.input {
+  flex-grow: 1;
+  width: 100%;
+  font-size: 16px;
+}
+
+.label {
+  position: absolute;
+  top: 16px;
+  left: 12px;
+  font-size: 16px;
+  color: #666;
+  pointer-events: none;
+  transition: top 0.2s ease, left 0.2s ease, font-size 0.2s ease,
+    color 0.2s ease;
+
+  &.float {
+    top: 5px;
+    left: 8px;
+    font-size: 14px;
+    color: #39414b;
+    background: white;
+    padding: 0 4px;
+    line-height: 1;
+  }
+
+  &.error {
+    color: #e00;
+  }
+}
+
+.errorMessage {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #e00;
+}
