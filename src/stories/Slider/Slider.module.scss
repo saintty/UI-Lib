@@ -1,0 +1,40 @@
+@use "./../__styles/mixins.scss" as *;
+
+.root {
+  width: 100%;
+  max-width: 300px;
+}
+
+.track {
+  position: relative;
+  height: 8px;
+  background: #ccc;
+  border-radius: 4px;
+  margin-top: 8px;
+  cursor: pointer;
+}
+
+.thumb {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 16px;
+  background-color: #007bff;
+  border-radius: 50%;
+  cursor: grab;
+  outline: none;
+}
+
+.thumb {
+  @include custom-focus;
+}
+
+.filled {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background-color: #007bff;
+  border-radius: 4px;
+}
