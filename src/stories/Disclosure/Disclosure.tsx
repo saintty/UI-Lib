@@ -17,7 +17,7 @@ export const Disclosure = ({
   children,
   isOpen: isOpenProp,
 }: Props) => {
-  const [, isOpen, setIsOpen] = useControlled(isOpenProp, false);
+  const [isOpen, setIsOpen] = useControlled(isOpenProp, false);
 
   const baseId = useId();
   const buttonId = `${baseId}-button`;

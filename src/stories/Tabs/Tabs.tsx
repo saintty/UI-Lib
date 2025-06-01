@@ -32,7 +32,7 @@ export const Tabs = <T,>({
     getTabKey,
   });
 
-  const [, selectedKey, setSelected] = useControlled(
+  const [selectedKey, setSelected] = useControlled(
     selectedKeyProp,
     tabs.length > 0 ? getTabKey(tabs[0]) : ""
   );

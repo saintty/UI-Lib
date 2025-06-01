@@ -24,7 +24,7 @@ export const Switch = ({
 }: Props) => {
   const checkboxId = useId();
 
-  const [, isChecked, setIsChecked] = useControlled(
+  const [isChecked, setIsChecked] = useControlled(
     isCheckedProp,
     defaultChecked
   );

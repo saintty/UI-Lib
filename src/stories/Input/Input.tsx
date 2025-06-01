@@ -21,7 +21,7 @@ type Props = Omit<
   defaultValue?: string;
   error?: string;
   startContent?: ReactNode;
-  endContent: ReactNode;
+  endContent?: ReactNode;
   isDisabled?: boolean;
   onChange?: (value: string) => void;
   onBlur?: () => void;
@@ -48,7 +48,7 @@ export const Input = ({
   const errorId = `${id}-error`;
 
   const [focused, setFocused] = useState(false);
-  const [, value, setValue] = useControlled(valueProp, defaultValue);
+  const [value, setValue] = useControlled(valueProp, defaultValue);
 
   const handleChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {

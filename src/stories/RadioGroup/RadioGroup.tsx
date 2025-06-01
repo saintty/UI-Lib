@@ -32,19 +32,16 @@ export const RadioGroup = ({
 }: Props) => {
   const labelId = useId();
 
-  const [isControlled, active, setActive] = useControlled(
-    valueProp,
-    defaultValue
-  );
+  const [active, setActive] = useControlled(valueProp, defaultValue);
 
   const handleChange = useCallback(
     (value: string) => {
       if (value === active) return;
 
+      setActive(value);
       onChange?.(value);
-      if (!isControlled) setActive(value);
     },
-    [active, onChange, isControlled, setActive]
+    [active, onChange, setActive]
   );
 
   return (

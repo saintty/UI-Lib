@@ -27,7 +27,7 @@ export const Radio = memo(
     onChange,
     ...rest
   }: Props) => {
-    const [isControlled, isChecked, setIsChecked] = useControlled(
+    const [isChecked, setIsChecked] = useControlled(
       isCheckedProp,
       !!defaultChecked
     );
@@ -37,10 +37,9 @@ export const Radio = memo(
         const { checked, value } = event.target;
 
         onChange?.(value);
-
-        if (!isControlled) setIsChecked(checked);
+        setIsChecked(checked);
       },
-      [isControlled, onChange, setIsChecked]
+      [onChange, setIsChecked]
     );
 
     return (
