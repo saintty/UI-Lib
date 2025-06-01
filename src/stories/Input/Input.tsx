@@ -1,5 +1,6 @@
 import {
   ChangeEvent,
+  forwardRef,
   InputHTMLAttributes,
   ReactNode,
   useCallback,
@@ -12,7 +13,7 @@ import { useControlled } from "../__hooks/useControlled";
 
 import s from "./Input.module.scss";
 
-type Props = Omit<
+export type Props = Omit<
   InputHTMLAttributes<HTMLInputElement>,
   "value" | "defaultValue" | "onChange" | "onBlur" | "onFocus"
 > & {
@@ -28,94 +29,102 @@ type Props = Omit<
   onFocus?: () => void;
 };
 
-export const Input = ({
-  id: idProp,
-  label,
-  value: valueProp,
-  defaultValue = "",
-  error,
-  startContent,
-  endContent,
-  isDisabled,
-  onChange,
-  onBlur,
-  onFocus,
-  ...props
-}: Props) => {
-  const inputId = useId();
-  const id = idProp || inputId;
-  const labelId = `${id}-label`;
-  const errorId = `${id}-error`;
-
-  const [focused, setFocused] = useState(false);
-  const [value, setValue] = useControlled(valueProp, defaultValue);
-
-  const handleChange = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      const { target } = event;
-
-      setValue(target.value);
-      onChange?.(target.value);
+export const Input = forwardRef<HTMLInputElement, Props>(
+  (
+    {
+      id: idProp,
+      label,
+      value: valueProp,
+      defaultValue = "",
+      error,
+      startContent,
+      endContent,
+      isDisabled,
+      onChange,
+      onBlur,
+      onFocus,
+      ...props
     },
-    [onChange, setValue]
-  );
+    ref
+  ) => {
+    const inputId = useId();
+    const id = idProp || inputId;
+    const labelId = `${id}-label`;
+    const errorId = `${id}-error`;
 
-  const handleBlur = useCallback(() => {
-    setFocused(false);
-    onBlur?.();
-  }, [onBlur]);
+    const [focused, setFocused] = useState(false);
+    const [value, setValue] = useControlled(valueProp, defaultValue);
 
-  const handleFocus = useCallback(() => {
-    setFocused(true);
-    onFocus?.();
-  }, [onFocus]);
+    const handleChange = useCallback(
+      (event: ChangeEvent<HTMLInputElement>) => {
+        const { target } = event;
 
-  const isLabelFloat = focused || value || startContent;
+        setValue(target.value);
+        onChange?.(target.value);
+      },
+      [onChange, setValue]
+    );
 
-  return (
-    <div
-      className={cx(s.root, {
-        [s.disabled]: isDisabled,
-      })}
-    >
+    const handleBlur = useCallback(() => {
+      setFocused(false);
+      onBlur?.();
+    }, [onBlur]);
+
+    const handleFocus = useCallback(() => {
+      setFocused(true);
+      onFocus?.();
+    }, [onFocus]);
+
+    const isLabelFloat = focused || value || startContent;
+
+    return (
       <div
-        className={cx(s.wrapper, {
-          [s.error]: !!error,
+        className={cx(s.root, {
+          [s.disabled]: isDisabled,
         })}
       >
-        {startContent && <div className={s.startContent}>{startContent}</div>}
-        <input
-          {...props}
-          type="text"
-          tabIndex={isDisabled ? -1 : 0}
-          aria-labelledby={labelId}
-          aria-invalid={!!error}
-          aria-describedby={error ? errorId : undefined}
-          disabled={isDisabled}
-          id={id}
-          className={s.input}
-          value={value}
-          onChange={handleChange}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-        />
-        {endContent && <div className={s.endContent}>{endContent}</div>}
-      </div>
-      <label
-        id={labelId}
-        htmlFor={id}
-        className={cx(s.label, {
-          [s.float]: isLabelFloat,
-          [s.error]: !!error,
-        })}
-      >
-        {label}
-      </label>
-      {error && (
-        <div id={errorId} className={s.errorMessage}>
-          {error}
+        <div
+          className={cx(s.wrapper, {
+            [s.error]: !!error,
+          })}
+        >
+          {startContent && <div className={s.startContent}>{startContent}</div>}
+          <input
+            {...props}
+            ref={ref}
+            type="text"
+            tabIndex={isDisabled ? -1 : 0}
+            aria-labelledby={labelId}
+            aria-invalid={!!error}
+            aria-describedby={error ? errorId : undefined}
+            disabled={isDisabled}
+            id={id}
+            className={s.input}
+            value={value}
+            onChange={handleChange}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+          />
+          {endContent && <div className={s.endContent}>{endContent}</div>}
         </div>
-      )}
-    </div>
-  );
-};
+        <label
+          id={labelId}
+          htmlFor={id}
+          className={cx(s.label, {
+            [s.float]: isLabelFloat,
+            [s.error]: !!error,
+          })}
+        >
+          {label}
+        </label>
+        {error && (
+          <div id={errorId} className={s.errorMessage}>
+            {error}
+          </div>
+        )}
+      </div>
+    );
+  }
+);
+
+Input.displayName = "Input";
