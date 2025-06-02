@@ -4,7 +4,7 @@ import { Input } from "./Input";
 import Image from "next/image";
 
 const meta: Meta<typeof Input> = {
-  title: "UI/Input",
+  title: "UI/Inputs/Input",
   component: Input,
   tags: ["autodocs"],
 };

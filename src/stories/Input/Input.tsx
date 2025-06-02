@@ -92,6 +92,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
           <input
             {...props}
             ref={ref}
+            autoComplete="off"
             type="text"
             tabIndex={isDisabled ? -1 : 0}
             aria-labelledby={labelId}

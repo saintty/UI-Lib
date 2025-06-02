@@ -1,7 +1,6 @@
-import { useEffect } from "react";
 import { useIMask } from "react-imask";
 
-import { isNil } from "../__utils/is-nil";
+import { useImaskSync } from "../__hooks/useImaskSync";
 
 import { Input, Props as PInput } from "../Input/Input";
 
@@ -43,10 +42,7 @@ export const NumberInput = ({
     }
   );
 
-  useEffect(() => {
-    if (!isNil(valueProp) && String(valueProp) !== unmaskedValue)
-      setValue(String(valueProp));
-  }, [setValue, unmaskedValue, valueProp]);
+  useImaskSync(valueProp, unmaskedValue, setValue);
 
   return <Input {...props} value={value} inputMode="numeric" ref={ref} />;
 };
