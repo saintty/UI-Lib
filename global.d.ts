@@ -9,6 +9,8 @@ declare global {
     children?: ReactNode;
   };
 
+  type SVG = FunctionComponent<SVGProps<SVGSVGElement>>;
+
   declare module "*.svg" {
     const url: string;
     const ReactComponent: FunctionComponent<SVGProps<SVGSVGElement>>;
