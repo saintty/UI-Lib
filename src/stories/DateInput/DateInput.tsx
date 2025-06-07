@@ -59,7 +59,7 @@ export const DateInput = ({
     [handleFocusOnClose]
   );
 
-  useClickOutside([rootRef, popoverRef], handleFocusOnClose, isOpen);
+  useClickOutside([rootRef], handleFocusOnClose, isOpen);
 
   return (
     <div className={s.root} ref={rootRef}>
