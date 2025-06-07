@@ -1,4 +1,4 @@
-import { focusable } from "./_constants";
+import { focusable } from "../__constants/focusable-elements";
 
 const isVisible = (el: HTMLElement) => {
   const style = window.getComputedStyle(el);

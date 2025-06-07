@@ -40,6 +40,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
       startContent,
       endContent,
       isDisabled,
+      className,
       onChange,
       onBlur,
       onFocus,
@@ -79,7 +80,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
 
     return (
       <div
-        className={cx(s.root, {
+        className={cx(s.root, className, {
           [s.disabled]: isDisabled,
         })}
       >

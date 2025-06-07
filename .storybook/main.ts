@@ -7,7 +7,14 @@ const config: StorybookConfig = {
     "@storybook/addon-onboarding",
     "@chromatic-com/storybook",
     "@storybook/experimental-addon-test",
-    "@newhighsco/storybook-addon-svgr",
+    {
+      name: "@newhighsco/storybook-addon-svgr",
+      options: {
+        svgrOptions: {
+          dimensions: false,
+        },
+      },
+    },
   ],
   framework: {
     name: "@storybook/nextjs",

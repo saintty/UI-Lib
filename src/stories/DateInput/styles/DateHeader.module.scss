@@ -1,0 +1,40 @@
+@use "./../../__styles/mixins.scss" as *;
+
+.root {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  padding: 0 4px;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.button {
+  cursor: pointer;
+  background-color: transparent;
+  border-radius: 10px;
+  transition: background-color 0.2s ease;
+
+  @include hover {
+    background-color: #e1e2e3;
+  }
+
+  @include custom-focus;
+}
+
+.icon {
+  padding: 2px;
+  display: block;
+  width: 20px;
+  height: 20px;
+
+  &.rotate {
+    transform: rotate(180deg);
+  }
+}

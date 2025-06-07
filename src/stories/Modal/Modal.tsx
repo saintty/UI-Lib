@@ -8,9 +8,9 @@ import React, {
 } from "react";
 import { createPortal } from "react-dom";
 
+import { useFocusTrap } from "../__hooks/useFocusTrap";
 import { useClickOutside } from "../__hooks/useClickOutside";
 
-import { getFocusableElements } from "./_helpers";
 import { lockScroll, unlockScroll } from "../__utils/scroll";
 
 import s from "./Modal.module.scss";
@@ -34,30 +34,14 @@ export const ModalWrapper = ({
   const contentRef = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLElement>(null);
 
+  const { focusNext } = useFocusTrap(contentRef);
+
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
       if (event.key === "Escape") return onClose();
-
-      if (event.key === "Tab") {
-        const focusable = getFocusableElements(contentRef.current!);
-        if (focusable.length === 0) return;
-
-        const first = focusable[0];
-        const last = focusable[focusable.length - 1];
-
-        const goingForward = !event.shiftKey;
-        const active = document.activeElement;
-
-        if (goingForward && active === last) {
-          event.preventDefault();
-          first.focus();
-        } else if (!goingForward && active === first) {
-          event.preventDefault();
-          last.focus();
-        }
-      }
+      if (event.key === "Tab") focusNext(event);
     },
-    [onClose]
+    [focusNext, onClose]
   );
 
   useClickOutside([contentRef], onClose);

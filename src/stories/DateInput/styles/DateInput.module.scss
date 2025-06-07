@@ -1,0 +1,42 @@
+.root {
+  position: relative;
+}
+
+.input {
+  pointer-events: none;
+  min-width: 260px;
+}
+
+.trigger {
+  cursor: pointer;
+}
+
+.popover {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 50%;
+  right: 0;
+  z-index: 10;
+  width: 260px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateX(-50%);
+}
+
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  font-size: 12px;
+  text-align: center;
+  color: #888;
+  margin-bottom: 4px;
+}
+
+.icon {
+  display: block;
+  width: 20px;
+  height: 20px;
+}

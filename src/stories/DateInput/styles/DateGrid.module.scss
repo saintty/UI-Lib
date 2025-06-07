@@ -1,0 +1,43 @@
+@use "./../../__styles/mixins.scss" as *;
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  user-select: none;
+}
+
+.week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.day {
+  width: 100%;
+  padding: 6px;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+
+  transition: background-color 0.2s ease;
+
+  @include hover {
+    background-color: #e1e2e3;
+  }
+
+  &.selected {
+    background-color: #3b82f6;
+    color: white;
+  }
+
+  &.outside {
+    pointer-events: none;
+    color: #ccc;
+  }
+
+  &.focused {
+    @include custom-focus;
+  }
+}
