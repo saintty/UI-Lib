@@ -2,7 +2,7 @@ import { RefObject, useEffect } from "react";
 
 export const useFocusOut = (
   ref: RefObject<HTMLElement | null>,
-  callback: () => void
+  callback?: () => void
 ) => {
   useEffect(() => {
     const node = ref.current;
@@ -12,7 +12,7 @@ export const useFocusOut = (
 
     const handleFocusOut = () => {
       timeout = setTimeout(() => {
-        if (!node.contains(document.activeElement)) callback();
+        if (!node.contains(document.activeElement)) callback?.();
       }, 0);
     };
 

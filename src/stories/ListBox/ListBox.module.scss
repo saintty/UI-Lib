@@ -9,6 +9,6 @@
   min-width: 250px;
   max-height: 200px;
 
-  @include custom-scrollbar;
   @include custom-focus;
+  @include hide-scrollbar;
 }

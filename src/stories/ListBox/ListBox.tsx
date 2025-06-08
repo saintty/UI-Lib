@@ -6,6 +6,8 @@ import React, {
   useState,
 } from "react";
 
+import { useControlled } from "../__hooks/useControlled";
+
 import { isNil } from "../__utils/is-nil";
 import { getNextIndex, getPrevIndex, keyDownHandlerKeys } from "./utils";
 
@@ -13,47 +15,54 @@ import { ListBoxItem } from "./ListBoxItem";
 
 import s from "./ListBox.module.scss";
 
-export interface ListBoxOption {
+export type ListBoxOption = {
   id: string;
   title: string;
   value: string;
-}
+};
 
-export interface Props {
+export type Props = {
+  id?: string;
   options: ListBoxOption[];
   defaultOptions?: ListBoxOption[];
-  dependentOptions?: ListBoxOption[];
+  selectedOptions?: ListBoxOption[];
   disabledOptions?: ListBoxOption[];
   label?: string;
   isMultiple?: boolean;
   getKey: (option: ListBoxOption) => string;
   getTitle: (option: ListBoxOption) => string;
   onChange?: (options: Set<ListBoxOption>) => void;
-}
+};
 
 export const ListBox = ({
+  id,
   options,
   label,
   isMultiple,
   defaultOptions,
-  dependentOptions,
+  selectedOptions: selectedOptionsProp,
   disabledOptions,
   getKey,
   getTitle,
   onChange,
 }: Props) => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const [selectedOptions, setSelectedOptions] = useState<Set<ListBoxOption>>(
-    defaultOptions ? new Set(defaultOptions) : new Set()
+  const [selectedOptions, setSelectedOptions] = useControlled(
+    selectedOptionsProp && new Set(selectedOptionsProp),
+    new Set(defaultOptions)
   );
 
   const rootRef = useRef<HTMLUListElement>(null);
-  const selectedOptionsRef = useRef<ListBoxOption[]>([...selectedOptions]);
+  const selectedOptionsRef = useRef<ListBoxOption[]>(
+    Array.from(selectedOptions || [])
+  );
   const ariaLiveMessage = useRef("");
 
   const handleClick = useCallback(
     (option: ListBoxOption) => {
       setSelectedOptions((prev) => {
+        if (!prev) return;
+
         let newState = new Set<ListBoxOption>();
         const alreadySelect = prev.has(option);
 
@@ -74,7 +83,7 @@ export const ListBox = ({
         return newState;
       });
     },
-    [getTitle, isMultiple, onChange]
+    [getTitle, isMultiple, onChange, setSelectedOptions]
   );
 
   const handleKeyDown = useCallback(
@@ -109,10 +118,6 @@ export const ListBox = ({
     items[activeIndex].scrollIntoView({ block: "nearest" });
   }, [activeIndex]);
 
-  useEffect(() => {
-    if (!isNil(dependentOptions)) setSelectedOptions(new Set(dependentOptions));
-  }, [dependentOptions]);
-
   const activeDescendant =
     activeIndex !== null ? getKey(options[activeIndex]) : undefined;
 
@@ -125,6 +130,7 @@ export const ListBox = ({
       )}
       <ul
         role="listbox"
+        id={id}
         className={s.root}
         tabIndex={0}
         ref={rootRef}

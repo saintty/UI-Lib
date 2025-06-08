@@ -1,0 +1,30 @@
+.root {
+  position: relative;
+}
+
+.trigger {
+  cursor: pointer;
+}
+
+.input {
+  pointer-events: none;
+}
+
+.options {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+}
+
+.icon {
+  display: block;
+  width: 20px;
+  height: 20px;
+  transform: rotate(-90deg);
+  transition: transform 0.15s ease;
+
+  &.open {
+    transform: rotate(90deg);
+  }
+}

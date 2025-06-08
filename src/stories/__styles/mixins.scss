@@ -34,6 +34,14 @@
   }
 }
 
+@mixin hide-scrollbar {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 @mixin custom-scrollbar(
   $width: 6px,
   $thumb-color: rgba(0, 0, 0, 0.3),
