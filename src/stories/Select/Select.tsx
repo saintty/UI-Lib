@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import cx from "classnames";
 
+import { useFocusOut } from "../__hooks/useFocusOut";
 import { useControlled } from "../__hooks/useControlled";
 import { useClickOutside } from "../__hooks/useClickOutside";
 
@@ -22,14 +23,14 @@ import { ReactComponent as ChevronIcon } from "icons/chevron.svg";
 
 import s from "./Select.module.scss";
 
-type Props = Omit<PListBox, "label"> & {
+export type Props = Omit<PListBox, "label"> & {
   label: string;
   error?: string;
 };
 
 export const Select = ({
   label,
-  defaultOptions,
+  defaultOptions = [],
   selectedOptions: selectedOptionsProp,
   isMultiple,
   error,
@@ -40,20 +41,21 @@ export const Select = ({
 }: Props) => {
   const listBoxId = useId();
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setOpen] = useState(false);
   const [selectedOptions, setSelectedOptions] = useControlled(
-    selectedOptionsProp && new Set(selectedOptionsProp),
-    new Set(defaultOptions)
+    selectedOptionsProp,
+    defaultOptions
   );
 
   const handleClose = useCallback(() => {
     inputRef.current?.focus();
-    setIsOpen(false);
+    setOpen(false);
   }, []);
 
   const rootRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const optionsRef = useRef<HTMLInputElement>(null);
+  const listboxRef = useRef<HTMLUListElement>(null);
 
   const inputValue = Array.from(selectedOptions || [])
     .reduce<string[]>((acc, curr) => [...acc, getTitle(curr)], [])
@@ -61,7 +63,7 @@ export const Select = ({
 
   const handleChange = useCallback(
     (options: Set<ListBoxOption>) => {
-      setSelectedOptions(options);
+      setSelectedOptions([...options]);
       onChange?.(options);
 
       if (!isMultiple) handleClose();
@@ -71,7 +73,7 @@ export const Select = ({
 
   const handleToggle = useCallback(
     () =>
-      setIsOpen((prev) => {
+      setOpen((prev) => {
         if (prev) inputRef.current?.focus();
         return !prev;
       }),
@@ -85,7 +87,8 @@ export const Select = ({
     [handleClose]
   );
 
-  useClickOutside([rootRef], () => setIsOpen(false));
+  useClickOutside([rootRef], () => setOpen(false));
+  useFocusOut(listboxRef, () => setOpen(false));
 
   useEffect(() => {
     if (isOpen) {
@@ -112,7 +115,7 @@ export const Select = ({
           readOnly
           onKeyDown={(event) => {
             event.preventDefault();
-            setIsOpen(true);
+            setOpen(true);
           }}
           endContent={
             <ChevronIcon className={cx(s.icon, { [s.open]: isOpen })} />
@@ -129,10 +132,11 @@ export const Select = ({
           <ListBox
             {...props}
             id={listBoxId}
+            ref={listboxRef}
             isMultiple={isMultiple}
             label={label}
             defaultOptions={defaultOptions}
-            selectedOptions={selectedOptionsProp}
+            selectedOptions={selectedOptions}
             getKey={getKey}
             getTitle={getTitle}
             onChange={handleChange}

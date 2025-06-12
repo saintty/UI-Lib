@@ -45,3 +45,18 @@ export const WithError: Story = {
     error: "Неверно выбран вариант ответа",
   },
 };
+
+export const WithDisabledOptions: Story = {
+  args: {
+    ...Default.args,
+    disabledOptions: items.slice(3, 5),
+  },
+};
+
+export const WithDefaultOptions: Story = {
+  args: {
+    ...Default.args,
+    isMultiple: true,
+    disabledOptions: items.slice(3, 5),
+  },
+};

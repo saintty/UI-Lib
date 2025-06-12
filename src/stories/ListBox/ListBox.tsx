@@ -1,4 +1,5 @@
 import React, {
+  forwardRef,
   KeyboardEvent,
   useCallback,
   useEffect,
@@ -9,6 +10,7 @@ import React, {
 import { useControlled } from "../__hooks/useControlled";
 
 import { isNil } from "../__utils/is-nil";
+import { mergeRefs } from "../__utils/merge-refs";
 import { getNextIndex, getPrevIndex, keyDownHandlerKeys } from "./utils";
 
 import { ListBoxItem } from "./ListBoxItem";
@@ -34,135 +36,142 @@ export type Props = {
   onChange?: (options: Set<ListBoxOption>) => void;
 };
 
-export const ListBox = ({
-  id,
-  options,
-  label,
-  isMultiple,
-  defaultOptions,
-  selectedOptions: selectedOptionsProp,
-  disabledOptions,
-  getKey,
-  getTitle,
-  onChange,
-}: Props) => {
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const [selectedOptions, setSelectedOptions] = useControlled(
-    selectedOptionsProp && new Set(selectedOptionsProp),
-    new Set(defaultOptions)
-  );
-
-  const rootRef = useRef<HTMLUListElement>(null);
-  const selectedOptionsRef = useRef<ListBoxOption[]>(
-    Array.from(selectedOptions || [])
-  );
-  const ariaLiveMessage = useRef("");
-
-  const handleClick = useCallback(
-    (option: ListBoxOption) => {
-      setSelectedOptions((prev) => {
-        if (!prev) return;
-
-        let newState = new Set<ListBoxOption>();
-        const alreadySelect = prev.has(option);
-
-        if (alreadySelect) {
-          prev.delete(option);
-
-          newState = new Set(prev);
-        } else if (isMultiple) newState = new Set(prev.add(option));
-        else newState = new Set([option]);
-
-        ariaLiveMessage.current = alreadySelect
-          ? `Удален элемент ${getTitle(option)}`
-          : `Выбран элемент ${getTitle(option)}`;
-
-        onChange?.(newState);
-
-        selectedOptionsRef.current = [...newState];
-        return newState;
-      });
+export const ListBox = forwardRef<HTMLUListElement, Props>(
+  (
+    {
+      id,
+      options,
+      label,
+      isMultiple,
+      defaultOptions,
+      selectedOptions: selectedOptionsProp,
+      disabledOptions,
+      getKey,
+      getTitle,
+      onChange,
     },
-    [getTitle, isMultiple, onChange, setSelectedOptions]
-  );
+    ref
+  ) => {
+    const [activeIndex, setActiveIndex] = useState<number | null>(null);
+    const [selectedOptions, setSelectedOptions] = useControlled(
+      selectedOptionsProp && new Set(selectedOptionsProp),
+      new Set(defaultOptions)
+    );
 
-  const handleKeyDown = useCallback(
-    (event: KeyboardEvent) => {
-      if (!rootRef.current || options.length === 0) return;
+    const rootRef = useRef<HTMLUListElement>(null);
+    const selectedOptionsRef = useRef<ListBoxOption[]>(
+      Array.from(selectedOptions || [])
+    );
+    const ariaLiveMessage = useRef("");
 
-      const { key } = event;
+    const handleClick = useCallback(
+      (option: ListBoxOption) => {
+        setSelectedOptions((prev) => {
+          if (!prev) return;
 
-      if (keyDownHandlerKeys.includes(key)) event.preventDefault();
-      if (key === "Escape") setActiveIndex(null);
-      if (key === "Home") setActiveIndex(0);
-      if (key === "End") setActiveIndex(options.length - 1);
+          let newState = new Set<ListBoxOption>();
+          const alreadySelect = prev.has(option);
 
-      if (key === "ArrowDown")
-        setActiveIndex((prev) => getNextIndex(prev, options.length));
+          if (alreadySelect) {
+            prev.delete(option);
 
-      if (key === "ArrowUp")
-        setActiveIndex((prev) => getPrevIndex(prev, options.length));
+            newState = new Set(prev);
+          } else if (isMultiple) newState = new Set(prev.add(option));
+          else newState = new Set([option]);
 
-      const selectKey = key === "Enter" || (isMultiple && key === " ");
-      if (selectKey && !isNil(activeIndex)) handleClick(options[activeIndex]);
-    },
-    [options, isMultiple, activeIndex, handleClick]
-  );
+          ariaLiveMessage.current = alreadySelect
+            ? `Удален элемент ${getTitle(option)}`
+            : `Выбран элемент ${getTitle(option)}`;
 
-  const handleBlur = useCallback(() => setActiveIndex(null), []);
+          onChange?.(newState);
 
-  useEffect(() => {
-    if (!rootRef.current || activeIndex === null) return;
+          selectedOptionsRef.current = [...newState];
+          return newState;
+        });
+      },
+      [getTitle, isMultiple, onChange, setSelectedOptions]
+    );
 
-    const items = rootRef.current.querySelectorAll("[role='option']");
-    items[activeIndex].scrollIntoView({ block: "nearest" });
-  }, [activeIndex]);
+    const handleKeyDown = useCallback(
+      (event: KeyboardEvent) => {
+        if (!rootRef.current || options.length === 0) return;
 
-  const activeDescendant =
-    activeIndex !== null ? getKey(options[activeIndex]) : undefined;
+        const { key } = event;
 
-  return (
-    <div>
-      {ariaLiveMessage.current && (
-        <div hidden aria-live="polite" aria-atomic="false">
-          {ariaLiveMessage.current}
-        </div>
-      )}
-      <ul
-        role="listbox"
-        id={id}
-        className={s.root}
-        tabIndex={0}
-        ref={rootRef}
-        aria-label={label}
-        aria-activedescendant={activeDescendant}
-        aria-multiselectable={isMultiple}
-        onKeyDown={handleKeyDown}
-        onBlur={handleBlur}
-      >
-        {options.map((option, index) => {
-          const isSelected = !!selectedOptionsRef.current.find(
-            (selectedOption) => getKey(selectedOption) === getKey(option)
-          );
-          const isDisabled = !!disabledOptions?.find(
-            (disabledOption) => getKey(disabledOption) === getKey(option)
-          );
-          const isActive = index === activeIndex;
+        if (keyDownHandlerKeys.includes(key)) event.preventDefault();
+        if (key === "Escape") setActiveIndex(null);
+        if (key === "Home") setActiveIndex(0);
+        if (key === "End") setActiveIndex(options.length - 1);
 
-          return (
-            <ListBoxItem
-              id={getKey(option)}
-              item={option}
-              key={getKey(option)}
-              title={getTitle(option)}
-              onClick={handleClick}
-              isActive={isActive}
-              isDisabled={isDisabled}
-              isSelected={isSelected}
-            />
-          );
-        })}
-      </ul>
-    </div>
-  );
-};
+        if (key === "ArrowDown")
+          setActiveIndex((prev) => getNextIndex(prev, options.length));
+
+        if (key === "ArrowUp")
+          setActiveIndex((prev) => getPrevIndex(prev, options.length));
+
+        const selectKey = key === "Enter" || (isMultiple && key === " ");
+        if (selectKey && !isNil(activeIndex)) handleClick(options[activeIndex]);
+      },
+      [options, isMultiple, activeIndex, handleClick]
+    );
+
+    const handleBlur = useCallback(() => setActiveIndex(null), []);
+
+    useEffect(() => {
+      if (!rootRef.current || activeIndex === null) return;
+
+      const items = rootRef.current.querySelectorAll("[role='option']");
+      items[activeIndex].scrollIntoView({ block: "nearest" });
+    }, [activeIndex]);
+
+    const activeDescendant =
+      activeIndex !== null ? getKey(options[activeIndex]) : undefined;
+
+    return (
+      <div>
+        {ariaLiveMessage.current && (
+          <div hidden aria-live="polite" aria-atomic="false">
+            {ariaLiveMessage.current}
+          </div>
+        )}
+        <ul
+          role="listbox"
+          id={id}
+          className={s.root}
+          tabIndex={0}
+          ref={mergeRefs(rootRef, ref)}
+          aria-label={label}
+          aria-activedescendant={activeDescendant}
+          aria-multiselectable={isMultiple}
+          onKeyDown={handleKeyDown}
+          onBlur={handleBlur}
+        >
+          {options.map((option, index) => {
+            const isSelected = !!selectedOptionsRef.current.find(
+              (selectedOption) => getKey(selectedOption) === getKey(option)
+            );
+            const isDisabled = !!disabledOptions?.find(
+              (disabledOption) => getKey(disabledOption) === getKey(option)
+            );
+            const isActive = index === activeIndex;
+
+            return (
+              <ListBoxItem
+                id={getKey(option)}
+                item={option}
+                key={getKey(option)}
+                title={getTitle(option)}
+                onClick={handleClick}
+                isActive={isActive}
+                isDisabled={isDisabled}
+                isSelected={isSelected}
+              />
+            );
+          })}
+        </ul>
+      </div>
+    );
+  }
+);
+
+ListBox.displayName = "ListBox";
