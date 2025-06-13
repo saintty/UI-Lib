@@ -2,6 +2,10 @@
 
 .root {
   position: relative;
+}
+
+.list {
+  position: relative;
   padding: 4px;
   border: 1px solid #e1e2e3;
   border-radius: 4px;
@@ -18,4 +22,31 @@
   overflow: hidden;
   text-overflow: ellipsis;
   border-radius: 2px;
+}
+
+.topShadow,
+.bottomShadow {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 20px;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+
+  &.visible {
+    opacity: 1;
+  }
+}
+
+.topShadow {
+  top: 0;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.15), transparent);
+}
+
+.bottomShadow {
+  bottom: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.15), transparent);
 }

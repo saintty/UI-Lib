@@ -6,9 +6,11 @@ import React, {
   useRef,
   useState,
 } from "react";
+import cx from "classnames";
 
-import { useControlled } from "../__hooks/useControlled";
 import { useScrollEnd } from "../__hooks/useScrollEnd";
+import { useControlled } from "../__hooks/useControlled";
+import { useScrollShadow } from "../__hooks/useScrollShadow";
 
 import { isNil } from "../__utils/is-nil";
 import { mergeRefs } from "../__utils/merge-refs";
@@ -134,21 +136,24 @@ export const ListBox = forwardRef<HTMLUListElement, Props>(
     }, [activeIndex]);
 
     useScrollEnd({ ref: rootRef, fn: onScrollEnd });
+    const { bottomShadow, topShadow } = useScrollShadow(rootRef);
 
     const activeDescendant =
       activeIndex !== null ? getKey(options[activeIndex]) : undefined;
 
     return (
-      <div>
+      <div className={s.root}>
         {ariaLiveMessage.current && (
           <div hidden aria-live="polite" aria-atomic="false">
             {ariaLiveMessage.current}
           </div>
         )}
+        <div className={cx(s.topShadow, { [s.visible]: topShadow })} />
+        <div className={cx(s.bottomShadow, { [s.visible]: bottomShadow })} />
         <ul
           role="listbox"
           id={id}
-          className={s.root}
+          className={s.list}
           tabIndex={0}
           ref={mergeRefs(rootRef, ref)}
           aria-label={label}

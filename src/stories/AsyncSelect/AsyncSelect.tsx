@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
+import { usePagination } from "../__hooks/usePagination";
+
 import { Props as PSelect, Select } from "./../Select/Select";
 import { ListBoxOption } from "../ListBox/ListBox";
 
@@ -7,14 +9,11 @@ export type Props = Omit<PSelect, "options"> & {
   getItems: (page: number, perPage: number) => Promise<ListBoxOption[]>;
 };
 
-const perPage = 10;
-
 export const AsyncSelect = ({ getItems, ...props }: Props) => {
-  const [page, setPage] = useState(1);
+  const { page, perPage, nextPage } = usePagination();
+
   const [options, setOptions] = useState<ListBoxOption[]>([]);
   const [isLoading, setLoading] = useState(false);
-
-  const nextPage = useCallback(() => setPage((prev) => prev + 1), []);
 
   const fetchPage = useCallback(
     async (page: number) => {
@@ -26,7 +25,7 @@ export const AsyncSelect = ({ getItems, ...props }: Props) => {
 
       setLoading(false);
     },
-    [getItems]
+    [getItems, perPage]
   );
 
   useEffect(() => {
