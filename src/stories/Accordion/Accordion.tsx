@@ -20,7 +20,7 @@ export const Accordion = ({
   const contentId = useId();
   const buttonId = useId();
 
-  const [isOpen, setIsOpen] = useControlled(isOpenProp);
+  const [isOpen, setIsOpen] = useControlled({ value: isOpenProp });
 
   const [maxHeight, setMaxHeight] = useState<string>("0px");
 

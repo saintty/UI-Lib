@@ -29,7 +29,10 @@ export const DateInput = ({
   defaultDate,
   onSelect,
 }: Props) => {
-  const [selectedDate, setSelectedDate] = useControlled(dateProp, defaultDate);
+  const [selectedDate, setSelectedDate] = useControlled({
+    value: dateProp,
+    defaultValue: defaultDate,
+  });
   const [currentMonth, setCurrentMonth] = useState(selectedDate || new Date());
   const [isOpen, setIsOpen] = useState(false);
 

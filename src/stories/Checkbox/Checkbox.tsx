@@ -26,7 +26,10 @@ export const Checkbox = ({
   const labelId = useId();
   const errorMessageId = useId();
 
-  const [isChecked, setChecked] = useControlled(checkedProp, defaultChecked);
+  const [isChecked, setChecked] = useControlled({
+    value: checkedProp,
+    defaultValue: defaultChecked,
+  });
 
   const handleToggle = useCallback(() => {
     setChecked((prev) => {

@@ -8,10 +8,16 @@ import React, {
 } from "react";
 
 import { useControlled } from "../__hooks/useControlled";
+import { useScrollEnd } from "../__hooks/useScrollEnd";
 
 import { isNil } from "../__utils/is-nil";
 import { mergeRefs } from "../__utils/merge-refs";
-import { getNextIndex, getPrevIndex, keyDownHandlerKeys } from "./utils";
+import {
+  getNextIndex,
+  getPrevIndex,
+  keyDownHandlerKeys,
+  transform,
+} from "./_utils";
 
 import { ListBoxItem } from "./ListBoxItem";
 
@@ -34,6 +40,7 @@ export type Props = {
   getKey: (option: ListBoxOption) => string;
   getTitle: (option: ListBoxOption) => string;
   onChange?: (options: Set<ListBoxOption>) => void;
+  onScrollEnd?: () => void;
 };
 
 export const ListBox = forwardRef<HTMLUListElement, Props>(
@@ -49,14 +56,16 @@ export const ListBox = forwardRef<HTMLUListElement, Props>(
       getKey,
       getTitle,
       onChange,
+      onScrollEnd,
     },
     ref
   ) => {
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
-    const [selectedOptions, setSelectedOptions] = useControlled(
-      selectedOptionsProp && new Set(selectedOptionsProp),
-      new Set(defaultOptions)
-    );
+    const [selectedOptions, setSelectedOptions] = useControlled({
+      value: selectedOptionsProp,
+      defaultValue: defaultOptions,
+      transform,
+    });
 
     const rootRef = useRef<HTMLUListElement>(null);
     const selectedOptionsRef = useRef<ListBoxOption[]>(
@@ -66,10 +75,11 @@ export const ListBox = forwardRef<HTMLUListElement, Props>(
 
     const handleClick = useCallback(
       (option: ListBoxOption) => {
+        let newState = new Set<ListBoxOption>();
+
         setSelectedOptions((prev) => {
           if (!prev) return;
 
-          let newState = new Set<ListBoxOption>();
           const alreadySelect = prev.has(option);
 
           if (alreadySelect) {
@@ -83,11 +93,10 @@ export const ListBox = forwardRef<HTMLUListElement, Props>(
             ? `Удален элемент ${getTitle(option)}`
             : `Выбран элемент ${getTitle(option)}`;
 
-          onChange?.(newState);
-
           selectedOptionsRef.current = [...newState];
           return newState;
         });
+        onChange?.(newState);
       },
       [getTitle, isMultiple, onChange, setSelectedOptions]
     );
@@ -123,6 +132,8 @@ export const ListBox = forwardRef<HTMLUListElement, Props>(
       const items = rootRef.current.querySelectorAll("[role='option']");
       items[activeIndex].scrollIntoView({ block: "nearest" });
     }, [activeIndex]);
+
+    useScrollEnd({ ref: rootRef, fn: onScrollEnd });
 
     const activeDescendant =
       activeIndex !== null ? getKey(options[activeIndex]) : undefined;
@@ -168,6 +179,9 @@ export const ListBox = forwardRef<HTMLUListElement, Props>(
               />
             );
           })}
+          {options.length === 0 && (
+            <div className={s.empty}>Не найдено элементов</div>
+          )}
         </ul>
       </div>
     );

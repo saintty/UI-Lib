@@ -12,3 +12,10 @@
   @include custom-focus;
   @include hide-scrollbar;
 }
+
+.empty {
+  padding: 10px 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-radius: 2px;
+}

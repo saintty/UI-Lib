@@ -36,7 +36,10 @@ export const Menu = <T,>({
   getItemTitle,
   onSelect,
 }: Props<T>) => {
-  const [isOpen, setIsOpen] = useControlled(isOpenProp, false);
+  const [isOpen, setIsOpen] = useControlled({
+    value: isOpenProp,
+    defaultValue: false,
+  });
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   const buttonRef = useRef<HTMLButtonElement>(null);

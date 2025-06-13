@@ -35,7 +35,10 @@ export const ImageInput = ({
 }: Props) => {
   const errorId = useId();
 
-  const [imageSrc, setImageSrc] = useControlled(valueProp, defaultValue);
+  const [imageSrc, setImageSrc] = useControlled({
+    value: valueProp,
+    defaultValue: defaultValue,
+  });
   const [originalDimensions, setOriginalDimensions] = useState({
     width: 0,
     height: 0,

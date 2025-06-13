@@ -4,21 +4,38 @@ import { isNil } from "../__utils/is-nil";
 
 type ReturnValue<T> = [T | undefined, Dispatch<SetStateAction<T | undefined>>];
 
-// TODO: Update parameter to accept init-callback fn for avoid infinite useEffect
-export const useControlled = <T>(
-  externalValue?: T,
-  defaultValue?: T
-): ReturnValue<T> => {
-  const initialValueRef = useRef(externalValue);
-  const initialDefaultValueRef = useRef(defaultValue);
+type UseControllerHook<T> = {
+  value?: T;
+  defaultValue?: T;
+};
+
+type UseControllerHookWithTransform<T, P = T> = UseControllerHook<T> & {
+  transform?: (value?: T) => P;
+};
+
+export function useControlled<T>(options: UseControllerHook<T>): ReturnValue<T>;
+
+export function useControlled<T, P>(
+  options: UseControllerHookWithTransform<T, P>
+): ReturnValue<P>;
+
+export function useControlled<T, P = T>({
+  defaultValue,
+  value: valueProp,
+  transform,
+}: UseControllerHookWithTransform<T, P>) {
+  const initialValueRef = useRef(transform?.(valueProp) ?? valueProp);
+  const initialDefaultValueRef = useRef(
+    transform?.(defaultValue) ?? defaultValue
+  );
 
   const [value, setValue] = useState(
     initialValueRef.current ?? initialDefaultValueRef.current
   );
 
   useEffect(() => {
-    if (!isNil(externalValue)) setValue(externalValue);
-  }, [externalValue]);
+    if (!isNil(valueProp)) setValue(transform?.(valueProp) ?? valueProp);
+  }, [valueProp, transform]);
 
   return [value, setValue];
-};
+}

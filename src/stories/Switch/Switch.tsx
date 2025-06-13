@@ -24,10 +24,10 @@ export const Switch = ({
 }: Props) => {
   const checkboxId = useId();
 
-  const [isChecked, setIsChecked] = useControlled(
-    isCheckedProp,
-    defaultChecked
-  );
+  const [isChecked, setIsChecked] = useControlled({
+    value: isCheckedProp,
+    defaultValue: defaultChecked,
+  });
 
   const handleChange = useCallback(() => {
     setIsChecked((prev) => {

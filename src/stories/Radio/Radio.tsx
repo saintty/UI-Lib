@@ -27,10 +27,10 @@ export const Radio = memo(
     onChange,
     ...rest
   }: Props) => {
-    const [isChecked, setIsChecked] = useControlled(
-      isCheckedProp,
-      !!defaultChecked
-    );
+    const [isChecked, setIsChecked] = useControlled({
+      value: isCheckedProp,
+      defaultValue: !!defaultChecked,
+    });
 
     const handleChange = useCallback(
       (event: ChangeEvent<HTMLInputElement>) => {

@@ -28,7 +28,10 @@ export const Slider = ({
 }: Props) => {
   const labelId = useId();
 
-  const [value, setValue] = useControlled(valueProp, defaultValue);
+  const [value, setValue] = useControlled({
+    value: valueProp,
+    defaultValue: defaultValue,
+  });
 
   const trackRef = useRef<HTMLDivElement>(null);
 

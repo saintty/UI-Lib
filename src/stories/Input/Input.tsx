@@ -54,7 +54,10 @@ export const Input = forwardRef<HTMLInputElement, Props>(
     const errorId = `${id}-error`;
 
     const [focused, setFocused] = useState(false);
-    const [value, setValue] = useControlled(valueProp, defaultValue);
+    const [value, setValue] = useControlled({
+      value: valueProp,
+      defaultValue: defaultValue,
+    });
 
     const handleChange = useCallback(
       (event: ChangeEvent<HTMLInputElement>) => {

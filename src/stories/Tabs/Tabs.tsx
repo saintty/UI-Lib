@@ -32,10 +32,10 @@ export const Tabs = <T,>({
     getTabKey,
   });
 
-  const [selectedKey, setSelected] = useControlled(
-    selectedKeyProp,
-    tabs.length > 0 ? getTabKey(tabs[0]) : ""
-  );
+  const [selectedKey, setSelected] = useControlled({
+    value: selectedKeyProp,
+    defaultValue: tabs.length > 0 ? getTabKey(tabs[0]) : "",
+  });
 
   const selectedIndex = useRef(0);
   const rootRef = useRef<HTMLDivElement>(null);

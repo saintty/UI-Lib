@@ -18,6 +18,7 @@ import {
   Props as PListBox,
 } from "./../ListBox/ListBox";
 import { Input } from "../Input/Input";
+import { Spinner } from "../Spinner/Spinner";
 
 import { ReactComponent as ChevronIcon } from "icons/chevron.svg";
 
@@ -25,14 +26,16 @@ import s from "./Select.module.scss";
 
 export type Props = Omit<PListBox, "label"> & {
   label: string;
+  isLoading?: boolean;
   error?: string;
 };
 
 export const Select = ({
   label,
-  defaultOptions = [],
+  defaultOptions,
   selectedOptions: selectedOptionsProp,
   isMultiple,
+  isLoading,
   error,
   getKey,
   getTitle,
@@ -42,10 +45,10 @@ export const Select = ({
   const listBoxId = useId();
 
   const [isOpen, setOpen] = useState(false);
-  const [selectedOptions, setSelectedOptions] = useControlled(
-    selectedOptionsProp,
-    defaultOptions
-  );
+  const [selectedOptions, setSelectedOptions] = useControlled({
+    defaultValue: defaultOptions,
+    value: selectedOptionsProp,
+  });
 
   const handleClose = useCallback(() => {
     inputRef.current?.focus();
@@ -118,7 +121,10 @@ export const Select = ({
             setOpen(true);
           }}
           endContent={
-            <ChevronIcon className={cx(s.icon, { [s.open]: isOpen })} />
+            <div className={s.endContent}>
+              {isLoading && <Spinner size="sm" variant="dots" />}
+              <ChevronIcon className={cx(s.icon, { [s.open]: isOpen })} />
+            </div>
           }
         />
       </div>
