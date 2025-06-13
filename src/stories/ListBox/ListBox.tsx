@@ -70,18 +70,14 @@ export const ListBox = forwardRef<HTMLUListElement, Props>(
     });
 
     const rootRef = useRef<HTMLUListElement>(null);
-    const selectedOptionsRef = useRef<ListBoxOption[]>(
-      Array.from(selectedOptions || [])
-    );
     const ariaLiveMessage = useRef("");
 
     const handleClick = useCallback(
       (option: ListBoxOption) => {
-        let newState = new Set<ListBoxOption>();
-
         setSelectedOptions((prev) => {
           if (!prev) return;
 
+          let newState = new Set<ListBoxOption>();
           const alreadySelect = prev.has(option);
 
           if (alreadySelect) {
@@ -95,10 +91,10 @@ export const ListBox = forwardRef<HTMLUListElement, Props>(
             ? `Удален элемент ${getTitle(option)}`
             : `Выбран элемент ${getTitle(option)}`;
 
-          selectedOptionsRef.current = [...newState];
+          setTimeout(() => onChange?.(newState));
+
           return newState;
         });
-        onChange?.(newState);
       },
       [getTitle, isMultiple, onChange, setSelectedOptions]
     );
@@ -138,6 +134,7 @@ export const ListBox = forwardRef<HTMLUListElement, Props>(
     useScrollEnd({ ref: rootRef, fn: onScrollEnd });
     const { bottomShadow, topShadow } = useScrollShadow(rootRef);
 
+    const selectedKeys = Array.from(selectedOptions || [], getKey);
     const activeDescendant =
       activeIndex !== null ? getKey(options[activeIndex]) : undefined;
 
@@ -163,8 +160,8 @@ export const ListBox = forwardRef<HTMLUListElement, Props>(
           onBlur={handleBlur}
         >
           {options.map((option, index) => {
-            const isSelected = !!selectedOptionsRef.current.find(
-              (selectedOption) => getKey(selectedOption) === getKey(option)
+            const isSelected = !!selectedKeys.find(
+              (key) => key === getKey(option)
             );
             const isDisabled = !!disabledOptions?.find(
               (disabledOption) => getKey(disabledOption) === getKey(option)
