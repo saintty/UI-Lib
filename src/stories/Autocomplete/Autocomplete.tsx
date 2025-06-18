@@ -24,12 +24,14 @@ import { Spinner } from "../Spinner/Spinner";
 import { ReactComponent as ChevronIcon } from "icons/chevron.svg";
 
 import s from "./Autocomplete.module.scss";
+import { useUpdate } from "../__hooks/useUpdate";
 
 export type Props = Omit<PListBox, "label" | "isMultiple"> & {
   label: string;
   isLoading?: boolean;
+  defaultSearch?: string;
   error?: string;
-  getItems: (search: string) => ListBoxOption[] | Promise<ListBoxOption[]>;
+  getItems: (search: string) => void;
 };
 
 export const Autocomplete = ({
@@ -38,6 +40,7 @@ export const Autocomplete = ({
   selectedOptions: selectedOptionsProp,
   isLoading,
   error,
+  defaultSearch,
   getKey,
   getTitle,
   onChange,
@@ -46,7 +49,8 @@ export const Autocomplete = ({
 }: Props) => {
   const listBoxId = useId();
 
-  const { value, search, onSearchReset, onSearchChange } = useSearch();
+  const { value, search, onSearchReset, onSearchChange } =
+    useSearch(defaultSearch);
 
   const [isOpen, setOpen] = useState(false);
   const [selectedOptions, setSelectedOptions] = useControlled({
@@ -94,7 +98,7 @@ export const Autocomplete = ({
     getItems(search);
   }, [getItems, search]);
 
-  useEffect(() => {
+  useUpdate(() => {
     const isEmptySearch = value.trim().length === 0;
     const hasSelectedBySearch = selectedOptions?.some(
       (item) => getTitle(item) === value
@@ -116,6 +120,7 @@ export const Autocomplete = ({
           aria-expanded={isOpen}
           role="combobox"
           aria-haspopup="listbox"
+          aria-autocomplete="list"
           aria-controls={listBoxId}
           endContent={
             <div className={s.endContent}>

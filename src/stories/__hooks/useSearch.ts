@@ -1,10 +1,13 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { useDebouncedCallback } from "./useDebouncedCallback";
 
-export const useSearch = () => {
-  const [value, setValue] = useState("");
-  const [search, setSearch] = useState("");
+export const useSearch = (
+  defaultSearch?: string,
+  resetOnDefaultChange = false
+) => {
+  const [value, setValue] = useState(defaultSearch || "");
+  const [search, setSearch] = useState(defaultSearch || "");
 
   const setSearchDebounce = useDebouncedCallback(setSearch);
 
@@ -20,6 +23,10 @@ export const useSearch = () => {
     setValue(value);
     setSearch(value);
   }, []);
+
+  useEffect(() => {
+    if (resetOnDefaultChange) onSearchReset(defaultSearch || "");
+  }, [defaultSearch, onSearchReset, resetOnDefaultChange]);
 
   return {
     value,
