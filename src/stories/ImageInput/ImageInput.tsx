@@ -7,9 +7,10 @@ import React, {
   KeyboardEvent,
   useId,
 } from "react";
-import { default as NextImage } from "next/image";
 import cx from "classnames";
+import { default as NextImage } from "next/image";
 
+import { useFileDrag } from "../__hooks/useFileDrag";
 import { useControlled } from "../__hooks/useControlled";
 
 import { getDimensions } from "./_helpers";
@@ -61,12 +62,8 @@ export const ImageInput = ({
 
   const handleClick = useCallback(() => inputRef.current?.click(), []);
 
-  const handleInputChange = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      const file = event.target.files?.[0];
-      if (!file || (maxFileSize && file.size > maxFileSize))
-        return handleChange("");
-
+  const handleAcceptFile = useCallback(
+    (file: File) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = (onLoadEvent) => {
@@ -82,12 +79,23 @@ export const ImageInput = ({
         };
       };
     },
-    [handleChange, maxFileSize]
+    [handleChange]
+  );
+
+  const handleInputChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      if (!file || (maxFileSize && file.size > maxFileSize))
+        return handleChange("");
+
+      handleAcceptFile(file);
+    },
+    [handleAcceptFile, handleChange, maxFileSize]
   );
 
   const handleRemove = useCallback(
-    (event: MouseEvent) => {
-      event.stopPropagation();
+    (event?: MouseEvent) => {
+      event?.stopPropagation();
       setImageSrc("");
       setOriginalDimensions({ width: 0, height: 0 });
     },
@@ -103,6 +111,17 @@ export const ImageInput = ({
     },
     [handleClick]
   );
+  const {
+    isDragging,
+    handleDragEnter,
+    handleDragOver,
+    handleDragLeave,
+    handleDrop,
+  } = useFileDrag({
+    accept: "image/*",
+    maxFileSize,
+    onDrop: handleAcceptFile,
+  });
 
   return (
     <div className={s.root} style={{ width }}>
@@ -116,7 +135,11 @@ export const ImageInput = ({
       <div
         tabIndex={0}
         role="button"
-        className={cx(s.area, { [s.selected]: imageSrc, [s.invalid]: !!error })}
+        className={cx(s.area, {
+          [s.selected]: imageSrc,
+          [s.invalid]: !!error,
+          [s.drag]: isDragging,
+        })}
         style={{ width, height }}
         aria-describedby={error ? errorId : undefined}
         aria-label={
@@ -124,6 +147,10 @@ export const ImageInput = ({
         }
         onClick={handleClick}
         onKeyDown={handleKeyDown}
+        onDragEnter={handleDragEnter}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
       >
         {imageSrc ? (
           <>
@@ -138,13 +165,16 @@ export const ImageInput = ({
               aria-label="Удалить изображение"
               type="button"
               className={s.remove}
+              tabIndex={0}
               onClick={handleRemove}
             >
               ×
             </button>
           </>
         ) : (
-          <span className={s.placeholder}>{label}</span>
+          <span className={s.placeholder}>
+            {isDragging ? "Отпустите файл, чтобы загрузить" : label}
+          </span>
         )}
       </div>
       {error && (

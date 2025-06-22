@@ -32,10 +32,16 @@
   &.invalid {
     border-color: red;
   }
+
+  &.drag {
+    border: 2px dashed #0070f3;
+    background-color: #f0faff;
+  }
 }
 
 .placeholder {
   color: #999;
+  pointer-events: none;
 }
 
 .image {
@@ -61,6 +67,8 @@
   border-radius: 50%;
   padding: 0;
   transition: background-color 0.2s ease;
+
+  @include custom-focus;
 
   @include hover {
     background-color: white;
