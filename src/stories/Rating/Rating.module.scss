@@ -1,0 +1,24 @@
+@use "./../__styles/mixins.scss" as *;
+
+.wrapper {
+  display: flex;
+  gap: 4px;
+}
+
+.star {
+  font-size: 32px;
+  line-height: 32px;
+  user-select: none;
+  cursor: pointer;
+  color: #ccc;
+
+  @include custom-focus;
+
+  &.filled {
+    color: gold;
+  }
+
+  &.readonly {
+    cursor: default;
+  }
+}
