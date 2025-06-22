@@ -1,0 +1,29 @@
+@use "./../../__styles/mixins.scss" as *;
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #e0f0ff;
+  color: #0366d6;
+  border-radius: 16px;
+  padding: 5px 10px;
+
+  @include custom-focus;
+}
+
+.remove {
+  cursor: pointer;
+  color: #0366d6;
+  border-radius: 100px;
+  padding: 2px;
+  background-color: #fff;
+  width: 20px;
+  height: 20px;
+  transition: color 0.15s ease, background-color 0.15s ease;
+
+  @include hover {
+    background-color: #0366d6;
+    color: #fff;
+  }
+}
