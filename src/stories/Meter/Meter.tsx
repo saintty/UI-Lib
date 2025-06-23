@@ -6,7 +6,7 @@ type Props = {
   min: number;
   max: number;
   now: number;
-  title: string;
+  title?: string;
 };
 
 export const Meter = ({ max, min, now, title }: Props) => {
@@ -18,7 +18,7 @@ export const Meter = ({ max, min, now, title }: Props) => {
 
   return (
     <div>
-      <span id={labelId}>{complexTitle}</span>
+      {title && <span id={labelId}>{complexTitle}</span>}
       <div
         role="meter"
         aria-labelledby={labelId}
@@ -30,8 +30,8 @@ export const Meter = ({ max, min, now, title }: Props) => {
       >
         <div
           className={s.fill}
-          style={{ width: `${perCent}%`, padding: 10 }}
-        ></div>
+          style={{ width: `${perCent}%`, padding: now !== min ? 10 : 0 }}
+        />
       </div>
     </div>
   );
