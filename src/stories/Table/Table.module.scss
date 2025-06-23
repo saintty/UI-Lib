@@ -1,0 +1,33 @@
+.root {
+  overflow-x: auto;
+  max-width: 100%;
+  width: 100%;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+  min-width: 400px;
+
+  th,
+  td {
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    text-align: left;
+    min-width: 100px;
+    word-break: break-word;
+  }
+
+  th {
+    background-color: #f8f8f8;
+    font-weight: 600;
+  }
+}
+
+.caption {
+  caption-side: top;
+  padding: 10px;
+  font-weight: 500;
+  text-align: left;
+}
