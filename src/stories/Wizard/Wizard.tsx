@@ -1,7 +1,8 @@
-import { ReactNode } from "react";
+import { memo, ReactNode } from "react";
+
+import { Meter } from "../Meter/Meter";
 
 import s from "./Wizard.module.scss";
-import { Meter } from "../Meter/Meter";
 
 export type Step = {
   id: string;
@@ -15,7 +16,7 @@ export type Props = {
   onStepChange: (index: number) => void;
 };
 
-export const Wizard = ({ steps, activeStep, onStepChange }: Props) => {
+export const Wizard = memo(({ steps, activeStep, onStepChange }: Props) => {
   const goPrev = () => {
     if (activeStep > 0) onStepChange(activeStep - 1);
   };
@@ -75,4 +76,6 @@ export const Wizard = ({ steps, activeStep, onStepChange }: Props) => {
       ))}
     </div>
   );
-};
+});
+
+Wizard.displayName = "Wizard";
