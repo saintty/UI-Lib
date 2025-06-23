@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { memo, ReactNode } from "react";
 import cx from "classnames";
 
 import s from "./Table.module.scss";
@@ -16,7 +16,7 @@ type Props<T extends Record<string, unknown>> = {
   items: T[];
 };
 
-export const Table = <T extends Record<string, unknown>>({
+export const TableComponent = <T extends Record<string, unknown>>({
   className,
   caption,
   columns,
@@ -54,3 +54,5 @@ export const Table = <T extends Record<string, unknown>>({
     </div>
   );
 };
+
+export const Table = memo(TableComponent) as typeof TableComponent;
