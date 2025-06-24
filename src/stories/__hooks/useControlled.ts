@@ -7,6 +7,7 @@ type ReturnValue<T> = [T | undefined, Dispatch<SetStateAction<T | undefined>>];
 type UseControllerHook<T> = {
   value?: T;
   defaultValue?: T;
+  shouldUpdate?: boolean;
 };
 
 type UseControllerHookWithTransform<T, P = T> = UseControllerHook<T> & {
@@ -22,6 +23,7 @@ export function useControlled<T, P>(
 export function useControlled<T, P = T>({
   defaultValue,
   value: valueProp,
+  shouldUpdate,
   transform,
 }: UseControllerHookWithTransform<T, P>) {
   const initialValueRef = useRef(transform?.(valueProp) ?? valueProp);
@@ -34,8 +36,10 @@ export function useControlled<T, P = T>({
   );
 
   useEffect(() => {
+    if (!shouldUpdate) return;
+
     if (!isNil(valueProp)) setValue(transform?.(valueProp) ?? valueProp);
-  }, [valueProp, transform]);
+  }, [valueProp, transform, shouldUpdate]);
 
   return [value, setValue];
 }

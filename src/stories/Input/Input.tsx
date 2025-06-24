@@ -24,6 +24,7 @@ export type Props = Omit<
   startContent?: ReactNode;
   endContent?: ReactNode;
   isDisabled?: boolean;
+  isDirectValue?: boolean;
   onChange?: (value: string) => void;
   onBlur?: () => void;
   onFocus?: () => void;
@@ -41,6 +42,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
       endContent,
       isDisabled,
       className,
+      isDirectValue,
       onChange,
       onBlur,
       onFocus,
@@ -57,6 +59,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
     const [value, setValue] = useControlled({
       value: valueProp,
       defaultValue: defaultValue,
+      shouldUpdate: !isDirectValue,
     });
 
     const handleChange = useCallback(
@@ -105,7 +108,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
             disabled={isDisabled}
             id={id}
             className={s.input}
-            value={value}
+            value={isDirectValue ? valueProp : value}
             onChange={handleChange}
             onFocus={handleFocus}
             onBlur={handleBlur}
