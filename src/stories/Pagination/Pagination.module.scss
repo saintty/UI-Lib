@@ -1,0 +1,47 @@
+@use "./../__styles/mixins.scss" as *;
+
+.root {
+  display: flex;
+  justify-content: center;
+}
+
+.list {
+  display: flex;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.button {
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+
+  @include custom-focus;
+  @include hover {
+    &:not(:disabled) {
+      background: #f0f0f0;
+    }
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
+.active {
+  font-weight: bold;
+  border-color: #0070f3;
+  background: #e6f0ff;
+  cursor: default;
+}
+
+.ellipsis {
+  padding: 10px 20px;
+  color: #999;
+  user-select: none;
+}
