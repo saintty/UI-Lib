@@ -1,0 +1,18 @@
+@use "./../__styles/mixins.scss" as *;
+
+.clear {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  color: black;
+  transition: color 0.15s ease, background-color 0.15s ease;
+  border-radius: 10px;
+  font-size: 12px;
+
+  @include hover {
+    background-color: #535353;
+    color: white;
+  }
+}

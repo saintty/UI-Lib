@@ -35,6 +35,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
     {
       id: idProp,
       label,
+      type = "text",
       value: valueProp,
       defaultValue = "",
       error,
@@ -100,7 +101,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
             {...props}
             ref={ref}
             autoComplete="off"
-            type="text"
+            type={type}
             tabIndex={isDisabled ? -1 : 0}
             aria-labelledby={labelId}
             aria-invalid={!!error}
