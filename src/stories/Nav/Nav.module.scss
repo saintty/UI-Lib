@@ -1,0 +1,103 @@
+@use "./../__styles/mixins.scss" as *;
+
+.header {
+  background-color: #1a1a1a;
+  color: #fff;
+  padding: 12px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  width: 100%;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.burger {
+  background: none;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 8px;
+  z-index: 1001;
+
+  @media (min-width: 768px) {
+    display: none;
+  }
+
+  @include custom-focus;
+}
+
+.bar {
+  width: 24px;
+  height: 2px;
+  background-color: #fff;
+  transition: all 0.3s ease;
+}
+
+.nav {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: #1a1a1a;
+  max-height: 0;
+  transition: max-height 0.3s ease;
+
+  @media (min-width: 768px) {
+    position: static;
+    max-height: none;
+    display: block;
+    background: none;
+  }
+}
+
+.open {
+  max-height: 300px;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 16px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    gap: 32px;
+    padding: 0;
+  }
+
+  a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+    position: relative;
+  }
+
+  a::after {
+    content: "";
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #fff;
+    transition: width 0.3s ease;
+  }
+
+  a:hover::after,
+  a:focus::after {
+    width: 100%;
+  }
+}
