@@ -7,3 +7,9 @@ export const SizeValues = {
 } as const;
 
 export type Size = ValuesOf<typeof SizeValues>;
+
+export type StorageValue<T> = {
+  get: () => T | null;
+  set: (value: T) => void;
+  clear: () => void;
+};
