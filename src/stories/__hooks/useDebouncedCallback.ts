@@ -4,7 +4,7 @@ const defaultDelay = 800;
 
 export const useDebouncedCallback = <Args extends unknown[]>(
   callback: (...args: Args) => void,
-  delay: number = defaultDelay
+  delay = defaultDelay
 ) => {
   const timer = useRef<NodeJS.Timeout | null>(null);
 
